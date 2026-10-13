@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A reproducible synthetic racing analytics demonstration for Oracle AI Data Platform.">
+  <title>Race Intelligence · AIDP demonstration</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to analysis</a>
+  <header><a class="wordmark" href="/">RACE INTELLIGENCE<span>AIDP DEMONSTRATION</span></a><span class="pill">SYNTHETIC DATA ONLY</span></header>
+  <main id="main">
+    <section class="intro"><p class="eyebrow">ORACLE AI DATA PLATFORM / REPRODUCIBLE ANALYTICS</p><h1>From governed data<br>to race decisions.</h1><p class="lede">A transparent timing-chase experiment. Follow the data through Bronze, Silver and Gold, then explore a virtual challenger against a simulated field.</p></section>
+    <section aria-labelledby="pipeline-title"><div class="section-heading"><h2 id="pipeline-title">01 / Data foundation</h2><span id="execution" class="mono">Loading provenance…</span></div>
+      <ol class="pipeline"><li><span>BRONZE</span><strong id="bronze-count">—</strong><p>Generated lap records</p></li><li><span>SILVER</span><strong id="silver-count">—</strong><p>Validated canonical laps</p></li><li><span>GOLD</span><strong id="gold-count">—</strong><p>Synthetic pace profiles</p></li><li><span>SERVING</span><strong>16 / 100</strong><p>Scenario populations</p></li></ol>
+      <p class="note">The local demo uses the same transformation code as the AIDP notebooks. It does not connect to Oracle. Workbench artifacts are explicitly identified when loaded.</p>
+    </section>
+    <section aria-labelledby="scenario-title"><div class="section-heading"><h2 id="scenario-title">02 / Scenario laboratory</h2><span class="mono">PURE TIMING · FIXED LAPS</span></div>
+      <form id="scenario-form"><label>Field size<select name="field_size"><option value="16">16 synthetic participants</option><option value="100">100 synthetic participants</option></select></label><label>Race length · laps<input name="race_laps" type="number" min="1" max="60" step="1" value="30" required></label><label>Challenger advantage · s/lap<input name="advantage" type="number" min="0.05" max="3" step="0.05" value="0.25" required></label><label>Starting delay · seconds<input name="delay" type="number" min="0" max="30" step="0.5" value="5" required></label><button id="run" type="submit">Run scenario <span aria-hidden="true">↗</span></button></form>
+      <p id="status" role="status" aria-live="polite">Loading published baseline…</p><p id="error" role="alert" hidden></p>
+      <div class="metrics"><div><span>FULL-FIELD TIMING PROBABILITY</span><strong id="probability">—</strong><small>Terminal margin · Monte Carlo</small></div><div><span>DETERMINISTIC DELAY LIMIT</span><strong id="delay-limit">—</strong><small>Constant nominal pace model</small></div><div><span>VIRTUAL CHALLENGER PACE</span><strong id="pace">—</strong><small>Assumption, not measured performance</small></div></div>
+      <div class="chart-heading"><h3>Starting delay vs. full-field probability</h3><span class="mono" id="sample-count">—</span></div>
+      <svg id="curve" viewBox="0 0 960 290" role="img" aria-label="Probability decreases as the challenger starts later"></svg>
+      <p class="note">The curve uses the same seeded random draws at every delay. These are conditional model probabilities, not confidence about a real race.</p>
+    </section>
+    <section aria-labelledby="cards-title"><div class="section-heading"><h2 id="cards-title">03 / Participant insight</h2><button id="download" type="button" disabled>Download scenario JSON ↓</button></div><p class="note">Select a participant to inspect a model-derived card. No real identity, photograph, starting grid or event result is included.</p>
+      <div class="participant-layout"><div><label for="participant">Synthetic participant</label><select id="participant"></select><div class="table-wrap"><table><caption>Nominal timing-chase results</caption><thead><tr><th scope="col">Participant</th><th scope="col">Pace · s/lap</th><th scope="col">Catch lap</th><th scope="col">Probability</th></tr></thead><tbody id="drivers"></tbody></table></div></div>
+      <article class="race-card" aria-labelledby="card-title"><div class="card-top"><span>RACE INTELLIGENCE</span><span>MODELLED</span></div><p class="eyebrow">SYNTHETIC PARTICIPANT</p><h3 id="card-title">—</h3><p>Virtual Challenger / timing comparison</p><div class="card-result"><span>NOMINAL LAP PACE</span><strong id="card-pace">—</strong></div><dl><div><dt>Timing-catch lap</dt><dd id="card-lap">—</dd></div><div><dt>Catch probability</dt><dd id="card-probability">—</dd></div></dl><footer>Illustrative scenario · not a real race result</footer></article></div>
+    </section>
+    <section class="method" aria-labelledby="method-title"><h2 id="method-title">Why AIDP?</h2><div><h3>One reproducible analytical path</h3><p>Workbench notebooks turn a defined input into validated Silver records, reusable Gold profiles and separately published scenario outputs. The dashboard consumes the serving projection—not private database credentials.</p><h3>Evidence stays separate from assumptions</h3><p>All inputs here are generated. A 100-participant stress test does not create 100 observed drivers. Timing equality is not physical overtaking. This demo excludes live telemetry, GPS, pit strategy and real-event forecasting.</p><h3>A bounded, honest demonstration</h3><p>Cloud execution requires an operator-configured AIDP environment. Monte Carlo runs on the notebook driver in this small example; distributed execution and Autonomous serving are not implemented in this public release.</p></div></section>
+  </main><footer class="page-footer">Race Intelligence · Public synthetic demonstration · No LIVE ingestion · No affiliation or endorsement implied.</footer>
+</body>
+</html>

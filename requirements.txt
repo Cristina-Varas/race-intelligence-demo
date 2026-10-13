@@ -1,0 +1,2 @@
+# Local pipeline, tests and dashboard require only Python 3.11+ standard library.
+# No package installation is required.
