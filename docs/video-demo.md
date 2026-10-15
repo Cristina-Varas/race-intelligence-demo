@@ -1,5 +1,10 @@
 # Video outline — AIDP first (approximately 5 minutes)
 
+This outline demonstrates the root-level synthetic pipeline. For a video of
+the existing application and its original AIDP notebooks, use
+[the full project Workbench guide](full-project-workbench.md), including its
+data prerequisites and validation sequence.
+
 ## Before recording
 
 - Run the tests and note the public repository commit.

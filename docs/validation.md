@@ -1,4 +1,4 @@
-# Public checkpoint validation — 2026-10-14
+# Public checkpoint validation — 2026-10-15
 
 ## Verified locally
 
@@ -17,6 +17,12 @@
 - The three retained calculation modules match the source extraction apart
   from display-label substitutions. No private data were used as test fixtures.
 - Public-content pattern scan and whitespace checks passed before publication.
+- The copied operational frontend built successfully; its 184 automated tests
+  passed. A neutral logo replaces the unavailable original asset.
+- 16 copied operational AIDP notebooks parsed successfully and have no saved
+  execution outputs. Their source import paths resolve inside `operational/`.
+- The selected operational Python suite passed 84 tests in a temporary Python
+  3.12 environment with the declared dependencies.
 
 ## Not verified / not claimed
 
@@ -26,6 +32,11 @@
 - Mocked Spark tests cover control flow and conflict handling only.
 - No real-event performance, forecast accuracy or production readiness claim.
 - Secret-pattern checks are not an exhaustive information-security audit.
+- Event-specific replay notebooks 15–19, real data, KML/geometries and original
+  documentation diagrams are absent. Tests that require those omitted assets
+  or older notebook versions were excluded from this public copy.
+- The separate `live-data-next` worktree was unavailable when this source
+  snapshot was prepared; the copy does not claim to contain its later changes.
 - No open-source licensing or employer publication approval is inferred by
   these technical checks.
 

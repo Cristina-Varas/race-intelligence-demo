@@ -1,5 +1,9 @@
 # Architecture and boundaries
 
+This diagram describes the root-level synthetic demo. The existing
+application and notebooks under `operational/` have a larger architecture;
+see [the Workbench guide](full-project-workbench.md).
+
 ```mermaid
 flowchart LR
   G[Seeded synthetic generator] --> B[Bronze source records]

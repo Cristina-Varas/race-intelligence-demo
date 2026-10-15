@@ -1,0 +1,3 @@
+# Cluster-scoped AIDP extraction dependency. Do not install matplotlib here:
+# it can resolve a competing NumPy layer against the platform pandas runtime.
+pdfplumber==0.11.10

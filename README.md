@@ -3,14 +3,16 @@
 **Turn a reproducible data foundation into explainable racing scenarios with
 Oracle AI Data Platform (AIDP).**
 
-This is a deliberately reduced public demonstration extracted from a larger
-analytical application. It retains its timing-chase calculation engine and adds
-an isolated synthetic dataset, clean Workbench notebooks and a lightweight
-dashboard. It is **not the operational event application or its full UI**.
+This repository has two clearly labelled experiences. The root-level demo is
+an isolated synthetic example. [`operational/`](operational/README.md) preserves
+the larger application's source and the existing AIDP notebook workflow for
+execution in an authorized Workbench environment. This workflow requires its
+governed inputs and configured platform resources.
 
-**No real participant data, recordings, GPS, LIVE ingestion, credentials,
-private infrastructure identifiers or original Git history are included.**
-All data are generated from code—not anonymized copies of event results.
+**No real participant data, recordings, GPS samples, credentials, private
+infrastructure identifiers or original Git history are included.** The
+operational source includes connection modules but no production configuration
+or data. The root demo's data are generated from code.
 
 ## AIDP is the analytical backbone
 
@@ -28,16 +30,23 @@ AIDP Workbench · operator-configured Spark/Delta runtime
 Verified JSON serving projection → Race Intelligence dashboard
 ```
 
-Workbench runs the shared Python transformations and publishes six demo Delta
-tables. Lakehouse storage, catalog/schema permissions and any OCI Object Storage
-backing are provisioned by the operator, **not by this repository**. No direct
-Object Storage upload, Autonomous Database integration, streaming service,
-distributed simulation or production deployment is claimed.
+For the root-level synthetic path, Workbench runs shared Python transformations
+and publishes six demo Delta tables. Lakehouse storage, catalog/schema
+permissions and any OCI Object Storage backing are provisioned by the operator.
+This small example does not implement direct Object Storage upload, Autonomous
+Database serving, streaming or distributed simulation. The larger operational
+source contains separate archive and serving code.
 
 The value demonstrated is a repeatable path from source to decisions: quality
 checks, separate evidence and scenario layers, deterministic seeds, content
 hashes, read-back verification, conflict detection and reusable serving outputs.
 These checks complement—not replace—platform access control and governance.
+
+For a video showing the existing AIDP workflow, use
+[`operational/notebooks_aidp`](operational/notebooks_aidp/) and
+[the Workbench instructions](docs/full-project-workbench.md). Those notebooks
+retain the established Bronze, Silver, Gold and serving logic. The six
+root-level notebooks form a separate synthetic example.
 
 ## Run locally
 
@@ -118,7 +127,8 @@ See [methodology and limitations](docs/methodology.md).
 ## Repository map
 
 ```text
-notebooks_aidp/  Workbench narrative; no saved execution outputs
+notebooks_aidp/  Standalone synthetic Workbench narrative
+operational/     Existing application and AIDP source, cleaned for publication
 race_demo/      Shared transformations, retained calculation engine, local server
 web/            Standalone, synthetic-only presentation
 tests/          Reproducibility, model, notebook and safety checks

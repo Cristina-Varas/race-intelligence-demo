@@ -1,0 +1,42 @@
+paths:
+  local_raw_data: "data/raw"
+  aidp_raw_data: "/Volumes/race_intelligence/bronze/raw_timing"
+  raw_data: "data/raw"
+  local_processed_data: "data/processed"
+  local_outputs: "outputs"
+  processed_data: "data/processed"
+  tables: "outputs/tables"
+  figures: "outputs/figures"
+
+# AIDP operational pipeline configuration. The Git workspace is code only;
+# all AIDP data is read from Volumes or written to governed catalog tables.
+aidp:
+  bronze_raw_volume: "/Volumes/race_intelligence/bronze/raw_timing"
+  bronze_landing_volume: "/Volumes/race_intelligence/bronze/validated_landing"
+  catalog: "race_intelligence"
+  silver_schema: "silver"
+  gold_historical_schema: "gold_historical"
+  gold_scenario_schema: "gold_scenario"
+  weather_offset_hours: -1
+
+# Scenario values are explicit assumptions, never historical measurements.
+scenario:
+  virtual_max:
+    reference_support_min_laps: 5
+    default_advantage_source: "observed_robust_p1_p2_difference"
+    sensitivity_advantages_seconds_per_lap: [0.10, 0.30]
+    scenario_race_laps: 30
+    future_synthetic_field_size: 100
+  monte_carlo:
+    simulations: 1000
+    random_seed: 42
+    uncertainty_source: "historical_within_driver"
+    virtual_max_variability: "field_derived_robust"
+    probability_thresholds: [0.50, 0.80, 0.90]
+  synthetic_field:
+    enabled: true
+    target_field_size: 100
+    random_seed: 42
+    generation_method: "bootstrap_bounded_perturbation"
+    pace_perturbation_mad_fraction: 0.10
+    pace_perturbation_bound_mad_fraction: 0.25

@@ -1,0 +1,198 @@
+import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it } from 'vitest'
+
+import { DocumentationPage } from './DocumentationPage'
+
+describe('DocumentationPage', () => {
+  it('opens Overview with governed provenance distinctions and its infographic', () => {
+    const { container } = render(<DocumentationPage />)
+
+    expect(screen.getByRole('heading', { name: /^Race Intelligence Documentation$/i })).toBeTruthy()
+    expect(screen.getAllByText('HISTORICAL EVIDENCE').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('SYNTHETIC SCENARIO').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('ACTUAL EVENT').length).toBeGreaterThan(0)
+    expect(container.querySelector('[aria-label="Data governance rule"]')?.textContent).toMatch(/OBSERVED\s*≠\s*MODELLED\s*≠\s*CAPTURED/i)
+    expect(screen.getByRole('heading', { name: /What you can do in the app/i })).toBeTruthy()
+    const overview = screen.getByRole('img', { name: /Race Intelligence overview showing Historical Evidence/i })
+    expect(overview.getAttribute('src')).toBe('/assets/documentation/race-intelligence-overview.png')
+    expect(within(container.querySelector('.docs-navigation')!).getByRole('button', { name: 'Overview' }).getAttribute('aria-current')).toBe('page')
+  })
+
+  it('navigates to the dedicated Architecture page without anchor scrolling', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    const navigation = within(container.querySelector('.docs-navigation')!)
+    await user.click(navigation.getByRole('button', { name: 'Architecture' }))
+    expect(screen.getByRole('heading', { name: /End-to-End Architecture/i })).toBeTruthy()
+    const architecture = screen.getByRole('img', { name: /End-to-end Race Intelligence architecture showing data sources/i })
+    expect(architecture.getAttribute('src')).toBe('/assets/documentation/race-intelligence-end-to-end-architecture.png')
+    expect(screen.getByText(/One AKS pipeline, two operational sources/i)).toBeTruthy()
+    expect(navigation.getByRole('button', { name: 'Architecture' }).getAttribute('aria-current')).toBe('page')
+  })
+
+  it('opens and closes the Overview infographic lightbox with keyboard controls', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    await user.click(within(container).getByRole('button', { name: /expand overview infographic/i }))
+    expect(screen.getByRole('dialog', { name: /overview infographic expanded/i })).toBeTruthy()
+    await user.keyboard('{Escape}')
+    expect(screen.queryByRole('dialog', { name: /overview infographic expanded/i })).toBeNull()
+  })
+
+  it('navigates to Data Domains & Governance with its governed content and infographic', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    const navigation = within(container.querySelector('.docs-navigation')!)
+    await user.click(navigation.getByRole('button', { name: 'Data Domains & Governance' }))
+
+    expect(screen.getByRole('heading', { name: /Data Domains & Governance/i })).toBeTruthy()
+    expect(screen.getAllByRole('heading', { name: /Historical Evidence|Synthetic Scenarios|Actual Event/i }).length).toBeGreaterThanOrEqual(3)
+    const governance = screen.getByRole('img', { name: /Race Intelligence data governance infographic/i })
+    expect(governance.getAttribute('src')).toBe('/assets/documentation/race-intelligence-data-domains-governance.png')
+    expect(screen.getByRole('heading', { name: /Domain Separation Principles/i })).toBeTruthy()
+    expect(screen.getByRole('table')).toBeTruthy()
+    expect(navigation.getByRole('button', { name: 'Data Domains & Governance' }).getAttribute('aria-current')).toBe('page')
+
+    await user.click(screen.getByRole('button', { name: /expand data domains and governance infographic/i }))
+    expect(screen.getByRole('dialog', { name: /data domains and governance infographic expanded/i })).toBeTruthy()
+    await user.click(screen.getByRole('button', { name: /close data domains and governance infographic/i }))
+    expect(screen.queryByRole('dialog', { name: /data domains and governance infographic expanded/i })).toBeNull()
+  })
+
+  it('navigates to an educational AIDP Lakehouse data model without screenshot placeholders', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    const navigation = within(container.querySelector('.docs-navigation')!)
+    await user.click(navigation.getByRole('button', { name: 'AIDP Lakehouse' }))
+
+    expect(screen.getByRole('heading', { name: /AIDP Lakehouse Pipeline/i })).toBeTruthy()
+    const pipeline = screen.getByRole('img', { name: /Race Intelligence AIDP Lakehouse pipeline/i })
+    expect(pipeline.getAttribute('src')).toBe('/assets/documentation/race-intelligence-aidp-lakehouse-pipeline.png')
+    expect(screen.getByRole('heading', { name: /What is Oracle AI Data Platform/i })).toBeTruthy()
+    expect(screen.getByRole('link', { name: /Oracle AI Data Platform Documentation/i }).getAttribute('href')).toBe('https://docs.oracle.com/en-us/iaas/ai-data-platform/index.html')
+    expect(screen.getByRole('link', { name: /Oracle AI Data Platform Workbench Documentation/i }).getAttribute('href')).toBe('https://docs.oracle.com/en/cloud/paas/ai-data-platform/')
+    expect(screen.getByText('What arrived?')).toBeTruthy()
+    expect(screen.getByText('What can we trust?')).toBeTruthy()
+    expect(screen.getByText('What does the application/business need?')).toBeTruthy()
+    expect(screen.getByText('How is it consumed?')).toBeTruthy()
+    expect(screen.getAllByText('event_session_raw').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('event_quality_issues').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('participant_card_feed').length).toBeGreaterThan(0)
+    expect(screen.getByText('V_EVENT_STORYLINE')).toBeTruthy()
+    expect(screen.getByRole('heading', { name: /Source of Truth/i })).toBeTruthy()
+    expect(screen.queryByText(/Real AIDP screenshot can be added here/i)).toBeNull()
+    expect(screen.getByText(/Rehearsal \/ validation only/i)).toBeTruthy()
+    expect(screen.getAllByText(/TIMING_CATCH and PASS/i).length).toBeGreaterThan(0)
+    expect(navigation.getByRole('button', { name: 'AIDP Lakehouse' }).getAttribute('aria-current')).toBe('page')
+
+    const rawLapCard = screen.getAllByText('event_lap_raw')[0].closest('details')!
+    expect(rawLapCard.hasAttribute('open')).toBe(false)
+    await user.click(rawLapCard.querySelector('summary')!)
+    expect(within(rawLapCard).getByText(/sector_1_seconds/i)).toBeTruthy()
+    expect(within(rawLapCard).getByText(/gap_to_max_seconds/i)).toBeTruthy()
+  })
+
+  it('uses an accessible Race Analysis hierarchy and keeps its overview focused', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    const navigation = within(container.querySelector('.docs-navigation')!)
+    await user.click(navigation.getByRole('button', { name: 'Race Analysis' }))
+
+    expect(screen.getByRole('heading', { name: /^Race Analysis$/i })).toBeTruthy()
+    const infographic = screen.getByRole('img', { name: /Race Analysis workflow showing field selection/i })
+    expect(infographic.getAttribute('src')).toBe('/assets/documentation/race-analysis-how-it-works.png')
+    expect(screen.getByText(/How much of a timing disadvantage can Virtual Max overcome/i)).toBeTruthy()
+    expect(screen.getAllByText(/not measured or learned Max Verstappen performance/i).length).toBeGreaterThan(0)
+    expect(container.querySelector('.docs-analysis-mini-nav')).toBeNull()
+    const expander = navigation.getByRole('button', { name: 'Toggle Race Analysis pages' })
+    expect(expander.getAttribute('aria-expanded')).toBe('true')
+    await user.click(navigation.getByRole('button', { name: 'Deterministic Analysis' }))
+    expect(screen.getByRole('heading', { name: /^Deterministic Analysis$/i })).toBeTruthy()
+    expect(screen.getByText('TIMING CATCH ≠ PHYSICAL PASS')).toBeTruthy()
+    const timingCatchImage = screen.getByRole('img', { name: /Infographic explaining that a timing catch occurs/i })
+    expect(timingCatchImage.getAttribute('src')).toBe('/assets/documentation/race-analysis-timing-catch-vs-physical-pass.png')
+    expect(navigation.getByRole('button', { name: 'Deterministic Analysis' }).getAttribute('aria-current')).toBe('page')
+  })
+
+  it('opens and closes the Race Analysis infographic lightbox', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    await user.click(within(container.querySelector('.docs-navigation')!).getByRole('button', { name: 'Race Analysis' }))
+    await user.click(within(container).getByRole('button', { name: /expand race analysis how it works infographic/i }))
+    expect(within(container).getByRole('dialog', { name: /race analysis how it works infographic expanded/i })).toBeTruthy()
+    await user.keyboard('{Escape}')
+    expect(within(container).queryByRole('dialog', { name: /race analysis how it works infographic expanded/i })).toBeNull()
+  })
+
+  it('opens and closes the Timing Catch versus Physical Pass infographic lightbox', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    await user.click(within(container.querySelector('.docs-navigation')!).getByRole('button', { name: 'Race Analysis' }))
+    await user.click(within(container.querySelector('.docs-navigation')!).getByRole('button', { name: 'Deterministic Analysis' }))
+    await user.click(within(container).getByRole('button', { name: /expand timing catch versus physical pass infographic/i }))
+    expect(within(container).getByRole('dialog', { name: /timing catch versus physical pass infographic expanded/i })).toBeTruthy()
+    await user.keyboard('{Escape}')
+    expect(within(container).queryByRole('dialog', { name: /timing catch versus physical pass infographic expanded/i })).toBeNull()
+  })
+
+  it('opens Mathematical Methodology with implementation-aligned formulas and cross-links', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    const navigation = within(container.querySelector('.docs-navigation')!)
+    await user.click(navigation.getByRole('button', { name: 'Race Analysis' }))
+    await user.click(navigation.getByRole('button', { name: 'Mathematical Methodology' }))
+
+    expect(screen.getByRole('heading', { name: /^Mathematical Methodology$/i })).toBeTruthy()
+    expect(screen.getAllByRole('math')[0].textContent).toMatch(/Δ/)
+    expect(screen.getByText(/catchLap/i)).toBeTruthy()
+    expect(screen.getByText(/direct minimum-margin calculation/i)).toBeTruthy()
+    expect(screen.getByText(/299/)).toBeTruthy()
+    expect(screen.getAllByText(/5,000 simulations/i).length).toBeGreaterThan(0)
+    expect(screen.getByText(/P50, P80 and P90/i)).toBeTruthy()
+    expect(screen.getByText(/seed = 42/i)).toBeTruthy()
+    expect(screen.getAllByText(/Common Random Numbers/i).length).toBeGreaterThan(0)
+    expect(container.querySelector('.docs-math-table')).toBeTruthy()
+
+    await user.click(navigation.getByRole('button', { name: 'Deterministic Analysis' }))
+    await user.click(within(container).getByRole('button', { name: /See the mathematics/i }))
+    expect(within(container).getByRole('heading', { name: /^Mathematical Methodology$/i })).toBeTruthy()
+    await user.click(navigation.getByRole('button', { name: 'Monte Carlo' }))
+    await user.click(within(container).getByRole('button', { name: /How is this calculated/i }))
+    expect(within(container).getByRole('heading', { name: /^Mathematical Methodology$/i })).toBeTruthy()
+  })
+
+  it('navigates Event Operations by child page and keeps its factual distinction', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    const navigation = within(container.querySelector('.docs-navigation')!)
+    await user.click(navigation.getByRole('button', { name: 'Event Operations' }))
+
+    expect(screen.getByRole('heading', { name: /^Event Operations$/i })).toBeTruthy()
+    expect(screen.getByText(/factual operational surface for captured Actual Event data/i)).toBeTruthy()
+    expect(screen.getByText(/Actual Event data is governed separately and never automatically becomes Historical Evidence/i)).toBeTruthy()
+    expect(navigation.getByRole('button', { name: 'Toggle Event Operations pages' }).getAttribute('aria-expanded')).toBe('true')
+    await user.click(navigation.getByRole('button', { name: 'Sessions' }))
+    expect(screen.getByRole('heading', { name: /^Sessions$/i })).toBeTruthy()
+    expect(screen.getByText('CREATED')).toBeTruthy()
+    expect(screen.getByText('RECORDING')).toBeTruthy()
+    expect(screen.getByText('COMPLETED')).toBeTruthy()
+    expect(screen.getByText(/means the recovery journal accepted the record/i)).toBeTruthy()
+    await user.click(navigation.getByRole('button', { name: 'Prediction vs Reality' }))
+    expect(screen.getByText(/comparison_available = false/i)).toBeTruthy()
+    expect(navigation.getByRole('button', { name: 'Prediction vs Reality' }).getAttribute('aria-current')).toBe('page')
+  })
+
+  it('expands a group from the mobile navigation and closes it after choosing a child', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<DocumentationPage />)
+    const toggle = within(container).getByRole('button', { name: /Documentation navigation/i })
+    await user.click(toggle)
+    expect(toggle.getAttribute('aria-expanded')).toBe('true')
+    const navigation = within(container.querySelector('.docs-navigation')!)
+    await user.click(navigation.getByRole('button', { name: 'Toggle Race Analysis pages' }))
+    await user.click(navigation.getByRole('button', { name: 'Monte Carlo' }))
+    expect(screen.getByRole('heading', { name: /^Monte Carlo$/i })).toBeTruthy()
+    expect(toggle.getAttribute('aria-expanded')).toBe('false')
+  })
+})

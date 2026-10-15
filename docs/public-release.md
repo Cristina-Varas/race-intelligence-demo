@@ -8,13 +8,16 @@
 - New standalone HTML/CSS/JavaScript presentation; no third-party assets/CDNs.
 - Tests, notebook-generation tooling, content checks and documentation.
 - Placeholder-only configuration and standard-library requirements notes.
+- `operational/`: existing application source, AIDP notebooks 00–14/99, their
+  direct Python dependencies, selected self-contained tests and SQL templates.
 
 ## Excluded
 
 Private Git history; all real data/results; source CSVs and PDFs; resources;
-recordings; GPS; raw sessions; operational LIVE code; archive caches; secrets;
-wallets; OCI configuration; private keys; database details; internal runbooks;
-screenshots; generated build artifacts; names and photos of participants.
+recordings; GPS samples; raw sessions; archive caches; secrets; wallets; OCI
+configuration; private keys; internal runbooks; screenshots; generated build
+artifacts; names and photos of participants. Connection modules remain as
+source code in `operational/`, without credentials or production endpoints.
 
 ## Release checks
 
@@ -38,7 +41,10 @@ choose a license separately before advertising the project as open source.
 
 ## Validation limits
 
-Local automated checks cover calculations, synthetic provenance, artifact
-conflicts, HTTP allowlists and notebook local execution. Mocked Spark tests check
+Local automated checks cover the synthetic calculation, provenance, artifact
+conflicts, HTTP allowlists, notebook local execution, selected operational
+notebook contracts and frontend compilation/tests. Mocked Spark tests check
 publication control flow, not actual Spark/Delta compatibility. AIDP execution,
 catalog authorization and managed storage require a real Workbench validation.
+Original tests requiring omitted KML/geometries or older notebook versions are
+not in this release; those resources and expectations cannot verify this copy.

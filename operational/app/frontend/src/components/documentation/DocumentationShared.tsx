@@ -1,0 +1,15 @@
+export type DocumentationPageId = 'overview' | 'architecture' | 'domains' | 'lakehouse' | 'analysis-overview' | 'analysis-field' | 'analysis-models' | 'analysis-deterministic' | 'analysis-monte-carlo' | 'analysis-mathematics' | 'analysis-visualizations' | 'analysis-participant-metrics' | 'analysis-safeguards' | 'operations-overview' | 'operations-sessions' | 'operations-evidence' | 'operations-prediction' | 'operations-storyline-cards' | 'operations-live-recorded' | 'operations-provenance' | 'aks' | 'methodology' | 'cards' | 'contracts'
+export type DocumentationItem = { id: DocumentationPageId; label: string }
+export type DocumentationGroup = { id: 'analysis' | 'operations'; label: string; overviewId: DocumentationPageId; children: DocumentationItem[] }
+
+export const documentationPages: DocumentationItem[] = [
+  { id: 'overview', label: 'Overview' }, { id: 'architecture', label: 'Architecture' }, { id: 'domains', label: 'Data Domains & Governance' }, { id: 'lakehouse', label: 'AIDP Lakehouse' }, { id: 'aks', label: 'AKS Live Timing' }, { id: 'methodology', label: 'Methodology' }, { id: 'cards', label: 'Participant Cards' }, { id: 'contracts', label: 'Data Contracts' },
+]
+export const documentationGroups: DocumentationGroup[] = [
+  { id: 'analysis', label: 'Race Analysis', overviewId: 'analysis-overview', children: [{ id: 'analysis-overview', label: 'Overview' }, { id: 'analysis-field', label: 'Field & Virtual Max' }, { id: 'analysis-models', label: 'Race Models' }, { id: 'analysis-deterministic', label: 'Deterministic Analysis' }, { id: 'analysis-monte-carlo', label: 'Monte Carlo' }, { id: 'analysis-mathematics', label: 'Mathematical Methodology' }, { id: 'analysis-visualizations', label: 'Visualizations' }, { id: 'analysis-participant-metrics', label: 'Participant Metrics' }, { id: 'analysis-safeguards', label: 'Safeguards' }] },
+  { id: 'operations', label: 'Event Operations', overviewId: 'operations-overview', children: [{ id: 'operations-overview', label: 'Overview' }, { id: 'operations-sessions', label: 'Sessions' }, { id: 'operations-evidence', label: 'Participants & Evidence' }, { id: 'operations-prediction', label: 'Prediction vs Reality' }, { id: 'operations-storyline-cards', label: 'Storyline & Cards' }, { id: 'operations-live-recorded', label: 'Live & Recorded' }, { id: 'operations-provenance', label: 'Provenance & Safeguards' }] },
+]
+export const allDocumentationPages = [...documentationPages, ...documentationGroups.flatMap((group) => group.children)]
+export const pageFor = (id: DocumentationPageId) => allDocumentationPages.find((item) => item.id === id)!
+export const groupFor = (id: DocumentationPageId) => documentationGroups.find((group) => group.children.some((item) => item.id === id))
+export function ProvenanceBadge({ type }: { type: 'historical' | 'synthetic' | 'event' | 'rehearsal' }) { return <span className={`docs-badge ${type}`}>{({ historical: 'HISTORICAL EVIDENCE', synthetic: 'SYNTHETIC SCENARIO', event: 'ACTUAL EVENT', rehearsal: 'REHEARSAL DATA' })[type]}</span> }

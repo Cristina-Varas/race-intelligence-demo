@@ -1,0 +1,18 @@
+export type EventOperationsDefinitionId = 'actual-event' | 'rehearsal-data' | 'session-status' | 'prediction-vs-reality' | 'comparison-available' | 'provenance' | 'pending' | 'synced' | 'storyline' | 'participant-card'
+
+export type EventOperationsDefinition = { id: EventOperationsDefinitionId; title: string; shortDescription: string; longDescription: string; section: string; documentationPage?: string }
+
+export const eventOperationsDefinitions: Record<EventOperationsDefinitionId, EventOperationsDefinition> = {
+  'actual-event': { id: 'actual-event', title: 'Actual Event', shortDescription: 'Independently captured physical-event evidence.', longDescription: 'Actual Event evidence remains separate from Historical Evidence and Synthetic Scenario outputs.', section: 'Overview', documentationPage: 'operations-overview' },
+  'rehearsal-data': { id: 'rehearsal-data', title: 'Rehearsal Data', shortDescription: 'Validation and operational rehearsal evidence.', longDescription: 'It can validate the capture path without being presented as a live production event.', section: 'Provenance & Trust' },
+  'session-status': { id: 'session-status', title: 'Session Status', shortDescription: 'The captured lifecycle state of the selected session.', longDescription: 'CREATED means capture has not started, RECORDING means evidence may be captured, and COMPLETED is closed to new unseen mutable capture.', section: 'Session Lifecycle' },
+  'prediction-vs-reality': { id: 'prediction-vs-reality', title: 'Prediction vs Reality', shortDescription: 'A preserved scenario snapshot compared with available event evidence.', longDescription: 'Prediction values are captured scenario context. Actual values come only from captured Actual Event evidence.', section: 'Prediction vs Reality', documentationPage: 'operations-prediction' },
+  'comparison-available': { id: 'comparison-available', title: 'Comparison Available', shortDescription: 'Both prediction and actual evidence are available for a comparison.', longDescription: 'When false, unavailable values remain null. The application does not fabricate a comparison.', section: 'Prediction vs Reality' },
+  provenance: { id: 'provenance', title: 'Provenance', shortDescription: 'The governed origin and evidence category of a displayed value.', longDescription: 'Provenance distinguishes Actual Event evidence from rehearsal data, Historical Evidence and Synthetic Scenario outputs.', section: 'Provenance & Trust' },
+  pending: { id: 'pending', title: 'PENDING', shortDescription: 'Captured locally and journaled, but not yet confirmed downstream.', longDescription: 'PENDING is not equivalent to AIDP persistence.', section: 'Sessions', documentationPage: 'operations-sessions' },
+  synced: { id: 'synced', title: 'SYNCED', shortDescription: 'Downstream persistence succeeded.', longDescription: 'SYNCED acknowledges the configured downstream persistence adapter, not a change to Historical Evidence.', section: 'Journal / Capture Status' },
+  storyline: { id: 'storyline', title: 'Storyline', shortDescription: 'An ordered timeline assembled from captured event and media evidence.', longDescription: 'The storyline is factual stored event context. It is not generated fictional commentary.', section: 'Storyline / Timeline' },
+  'participant-card': { id: 'participant-card', title: 'Participant Card', shortDescription: 'A downstream factual output from Gold Event.', longDescription: 'Card styling can evolve, but displayed factual values remain traceable to governed Event data and explicit provenance.', section: 'Participant Cards' },
+}
+
+export function eventOperationsDefinition(id: EventOperationsDefinitionId) { return eventOperationsDefinitions[id] }

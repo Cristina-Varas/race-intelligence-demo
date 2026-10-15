@@ -1,0 +1,11 @@
+pandas
+numpy
+ipykernel
+pdfplumber
+pyarrow
+pyyaml
+pytest
+matplotlib
+scipy
+scikit-learn
+nbconvert

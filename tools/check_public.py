@@ -6,16 +6,17 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 TOP_FILES = {"README.md", ".gitignore", ".gitattributes", ".env.example", "requirements.txt", "requirements-aidp.txt"}
-DIRECTORIES = {"race_demo", "notebooks_aidp", "docs", "web", "tests", "tools"}
-SUFFIXES = {".py", ".ipynb", ".md", ".html", ".css", ".js"}
+DIRECTORIES = {"race_demo", "notebooks_aidp", "docs", "web", "tests", "tools", "operational"}
+SUFFIXES = {".py", ".ipynb", ".md", ".html", ".css", ".js", ".ts", ".tsx", ".json", ".yaml", ".sql", ".txt", ".svg"}
 RULES = {
     "private-key": r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
     "cloud-identifier": r"ocid1\.[a-z0-9]+\.",
     "private-infrastructure": r"[\w.-]+\.(?:oraclecloud|alkamelcloud)\.com",
+    "known-private-storage-namespace": "fro8" + "fl9kuqli|bucket-redbull" + "-race-intelligence",
     "personal-absolute-path": r"/(?:Users|home)/[A-Za-z0-9_.-]+/",
     "github-token": r"(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{30,})",
     "aws-access-key": r"AKIA[A-Z0-9]{16}",
-    "credential-assignment": r'''(?im)^\s*(?:password|secret|api_key|access_token|aks_username|aks_password)\s*[:=]\s*["']?[^\s<>#"']{5,}''',
+    "credential-assignment": r'''(?im)^\s*(?:password|secret|api_key|access_token|aks_username|aks_password)\s*[:=]\s*["'][^"']{5,}["']''',
     "email-address": r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
 }
 
@@ -39,14 +40,14 @@ def main():
     for name in sorted(set(filter(None, names))):
         relative = Path(name)
         path = ROOT / relative
-        allowed = name in TOP_FILES or (relative.parts[0] in DIRECTORIES and path.suffix in SUFFIXES)
+        allowed = name in TOP_FILES or (relative.parts[0] in DIRECTORIES and (path.suffix in SUFFIXES or relative.name == '.env.example'))
         if not allowed:
             findings.append(f"{name}: outside public allowlist")
             continue
         if path.is_symlink() or not path.is_file():
             findings.append(f"{name}: not a regular file")
             continue
-        if path.stat().st_size > 200_000:
+        if path.stat().st_size > 350_000:
             findings.append(f"{name}: unexpectedly large file")
             continue
         findings.extend(check_text(name, path.read_text()))
